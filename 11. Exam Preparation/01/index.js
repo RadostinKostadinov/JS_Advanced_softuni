@@ -1,110 +1,73 @@
+"use strict";
 function solve() {
-    document.querySelector('form div button:first-child').addEventListener('click', onClick);
+    const lectureName = document.querySelector('input[name=lecture-name]');
+    const date = document.querySelector('input[name=lecture-date]');
+    const module = document.querySelector('select[name=lecture-module]');
+    document.querySelector('div.form-control button').addEventListener('click', addLecture);
+    const trainingModules = document.querySelector('div.modules');
 
-    const lectNameField = document.querySelector('form div input[type=\'text\']');
-    const dateTimeField = document.querySelector('form div input[type=\'datetime-local\']');
-    const moduleField = document.querySelector('form div select[name=\'lecture-module\']');
-    const modulesDiv = document.querySelector('div.modules');;
-
-    //CREATING MODULES HEADERS
-    const headBasicsModule = e('div');
-    headBasicsModule.setAttribute('class', 'module');
-    headBasicsModule.appendChild(e('h3', 'BASICS-MODULE'));
-    headBasicsModule.style.display = 'none';
-    const basicsModuleUL = e('ul');
-    modulesDiv.appendChild(headBasicsModule);
-
-    const headFundamentalsModule = e('div');
-    headFundamentalsModule.setAttribute('class', 'module');
-    headFundamentalsModule.appendChild(e('h3', 'FUNDAMENTALS-MODULE'));
-    headFundamentalsModule.style.display = 'none';
-    const fundamentalsModuleUL = e('ul');
-    modulesDiv.appendChild(headFundamentalsModule);
-
-    const headAdvancedModule = e('div');
-    headAdvancedModule.setAttribute('class', 'module');
-    headAdvancedModule.appendChild(e('h3', 'ADVANCED-MODULE'));
-    headAdvancedModule.style.display = 'none';
-    const advancedModuleUL = e('ul');
-    modulesDiv.appendChild(headAdvancedModule);
-
-    const headDBModule = e('div');
-    headDBModule.setAttribute('class', 'module');
-    headDBModule.appendChild(e('h3', 'DB-MODULE'));
-    headDBModule.style.display = 'none';
-    const dbModuleUL = e('ul');
-    modulesDiv.appendChild(headDBModule);
-
-    const headWebModule = e('div');
-    headWebModule.setAttribute('class', 'module');
-    headWebModule.appendChild(e('h3', 'WEB-MODULE'));
-    headWebModule.style.display = 'none';
-    const webModuleUL = e('ul');
-    modulesDiv.appendChild(headWebModule);
+    createTrainingsLists(); //creates div elements in traning section (header for every module)
 
 
-    const basics = [];
-    const fundamentals = [];
-    const advanced = [];
-    const db = [];
-    const web = [];
 
-    function onClick(ev) {
+    function addLecture(ev) {
         ev.preventDefault();
-        if (isValidName() && isValidDate() && isValidModule()) {
 
-            if(moduleField.value == 'Basics') {
+        if (lectureName.value != '' && date.value != '' && module.value != 'Select module...') { // input validation (must not be empty or default value)
 
-            } else if (moduleField.value == 'Fundamentals') {
+            // creates new row
+            const delButton = e('button', 'Del');
+            delButton.setAttribute('class', 'red');
+            delButton.addEventListener('click', deleteLi);
 
-            } else if (moduleField.value == 'Advanced') {
+            const chosenDate = date.value;
+            const li = e('li',
+                e('h4', `DOM - ${chosenDate.slice(0, 4)}/${chosenDate.slice(5, 7)}/${chosenDate.slice(8, 10)} - ${chosenDate.slice(-5)}`),
+                delButton);
+            li.setAttribute('class', 'flex');
 
-            } else if (moduleField.value == 'DB') {
+            // add created row(li) to expected module
+            const moduleList = document.querySelector(`div[name=${module.value.toUpperCase()}]`);
+            moduleList.style.display = 'block';
+            moduleList.children[1].appendChild(li);
 
-            } else if (moduleField.value == 'Web')
-            
-            const time = dateTimeField.value.slice(-5);
-            const date = dateTimeField.value.slice(0, 10);
-            const rowBt = e('button', 'Del');
-            rowBt.setAttribute('class', 'red');
-            const tableRow = e('li',
-                e('h4', `DOM - ${date} - ${time}`),
-                rowBt);
-            tableRow.setAttribute('class','flex');
-            
-
-
-            advancedModuleUL.appendChild(tableRow);
-            headAdvancedModule.appendChild(advancedModuleUL);
-            headAdvancedModule.style.display = 'block';
-
-        } else {
-            console.log('NE MINAVA');
+            console.log('here1');
+            sortLectures(moduleList);
         }
     }
 
-    function isValidName() {
-        if (lectNameField.value == '') {
-            return false;
-        } else {
-            return true;
+    // deletes lecture in training section and if the deleted lecture was last one in its module, hides module...
+    function deleteLi(ev) {
+        if(Array.from(ev.target.parentNode.parentNode.parentNode.children[1].children).length == 1) {
+            ev.target.parentNode.parentNode.parentNode.style.display = 'none';
         }
+        ev.target.parentNode.remove();
     }
 
-    function isValidDate() {
-        if (dateTimeField.value == '') {
-            return false;
-        } else {
-            return true;
-        }
+
+    function sortLectures(moduleListEl) {
+        const array = Array.from(moduleListEl.children[1].children);
+        array.sort((a, b) => a.textContent.localeCompare(b.textContent))
+            .forEach(el => moduleListEl.children[1].appendChild(el));
     }
 
-    function isValidModule() {
-        if (moduleField.value == 'Select module') {
-            return false;
-        } else {
-            return true;
-        }
+    function createTrainingsLists() {      
+        const options = [];
+        for (let i = 1; i < module.options.length; i++) {
+            options.push(module.options[i].text.toUpperCase());
+        };
+
+        // creates div element in training section (header for every module)
+        options.forEach(option => {
+            const div = e('div',
+                e('h3', `${option}-MODULE`),
+                e('ul'));
+            div.className = 'module';
+            div.setAttribute('name', option);
+            div.style.display = 'none';
+            trainingModules.appendChild(div);
+        });
+
     }
 
     function e(type, ...content) {
@@ -120,5 +83,4 @@ function solve() {
         });
         return result;
     }
-
 };
