@@ -1,4 +1,3 @@
-"use strict";
 function solve() {
     const lectureName = document.querySelector('input[name=lecture-name]');
     const date = document.querySelector('input[name=lecture-date]');
@@ -22,7 +21,7 @@ function solve() {
 
             const chosenDate = date.value;
             const li = e('li',
-                e('h4', `DOM - ${chosenDate.slice(0, 4)}/${chosenDate.slice(5, 7)}/${chosenDate.slice(8, 10)} - ${chosenDate.slice(-5)}`),
+                e('h4', `${lectureName.value} - ${chosenDate.slice(0, 4)}/${chosenDate.slice(5, 7)}/${chosenDate.slice(8, 10)} - ${chosenDate.slice(-5)}`),
                 delButton);
             li.setAttribute('class', 'flex');
 
@@ -36,7 +35,8 @@ function solve() {
         }
     }
 
-    // deletes lecture in training section and if the deleted lecture was last one in its module, hides module...
+    // this function deletes lecture in training section
+    //      if the deleted lecture was last one in its module, hides module...
     function deleteLi(ev) {
         if(Array.from(ev.target.parentNode.parentNode.parentNode.children[1].children).length == 1) {
             ev.target.parentNode.parentNode.parentNode.style.display = 'none';
@@ -47,7 +47,7 @@ function solve() {
 
     function sortLectures(moduleListEl) {
         const array = Array.from(moduleListEl.children[1].children);
-        array.sort((a, b) => a.textContent.localeCompare(b.textContent))
+        array.sort((a, b) => a.textContent.slice(-18).localeCompare(b.textContent.slice(-18)))
             .forEach(el => moduleListEl.children[1].appendChild(el));
     }
 
@@ -57,7 +57,7 @@ function solve() {
             options.push(module.options[i].text.toUpperCase());
         };
 
-        // creates div element in training section (header for every module)
+        // creates div element in training section a.k.a. => (creates header for every module)
         options.forEach(option => {
             const div = e('div',
                 e('h3', `${option}-MODULE`),
