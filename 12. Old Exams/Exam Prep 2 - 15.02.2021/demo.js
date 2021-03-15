@@ -1,0 +1,2 @@
+'Ivan will eat Oshav, which consists of Fruits, Honey\nPetar will eat Folded cabbage leaves filled with rice, which consists of Cabbage, Rice, Salt, Savory\nGeorgi will eat Peppers filled with beans, which consists of Beans, Peppers, Salt'
+'Ivan will eat Oshav, which consists of Fruits, Honey\nPetar will eat Folded cabbage leaves filled with rice, which consists of Cabbage, Rice, Salt, Savory\nGeorgi will eat Peppers filled with beans, which consists of Beans, Peppers, Salt'
